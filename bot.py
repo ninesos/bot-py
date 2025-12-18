@@ -120,16 +120,16 @@ async def main():
     # เริ่ม web server
     await start_web_server()
     
-    # เริ่ม self-ping task
-    bot.loop.create_task(self_ping())
-    
     # เริ่มบอท
     token = os.environ.get('DISCORD_TOKEN')
     if not token:
         print("❌ ไม่พบ DISCORD_TOKEN ใน environment variables!")
         return
     
-    await bot.start(token)
+    async with bot:
+        # เริ่ม self-ping task หลังจากบอทพร้อม
+        bot.loop.create_task(self_ping())
+        await bot.start(token)
 
 if __name__ == '__main__':
     asyncio.run(main())
